@@ -1,7 +1,9 @@
-﻿using CityLibraryDomain.UnitOfWorks;
+﻿using CityLibraryApi.Notifications.Test;
+using CityLibraryDomain.UnitOfWorks;
 using CityLibraryInfrastructure.Entities;
 using CityLibraryInfrastructure.MapperConfigurations;
 using CityLibraryInfrastructure.Repositories;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -21,14 +23,16 @@ namespace CityLibrary.Controllers
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICustomMapper _mapper;
         private readonly IMemberRolesRepo _memberRolesRepo;
+        private readonly IMediator _mediator;
         private readonly HashSet<string> _defaultMemberRoleNames = new() { "User" };
-        public TestController(IMembersRepo membersRepo, IRolesRepo rolesRepo, IUnitOfWork unitOfWork, ICustomMapper mapper, IMemberRolesRepo memberRolesRepo)
+        public TestController(IMembersRepo membersRepo, IRolesRepo rolesRepo, IUnitOfWork unitOfWork, ICustomMapper mapper, IMemberRolesRepo memberRolesRepo, IMediator mediator)
         {
             _membersRepo = membersRepo;
             _rolesRepo = rolesRepo;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _memberRolesRepo = memberRolesRepo;
+            _mediator = mediator;
         }
 
         [HttpGet]
@@ -45,6 +49,7 @@ namespace CityLibrary.Controllers
         [HttpGet]
         public async Task<IEnumerable<Roles>> GetAllRoles()
         {
+            await _mediator.Publish(new TestNotification("Address from notification", "Name from notification"));
             return await _rolesRepo.GetData().Include(a => a.MemberRoles).Include(x => x.Members).IgnoreQueryFilters().ToListAsync();
         }
 

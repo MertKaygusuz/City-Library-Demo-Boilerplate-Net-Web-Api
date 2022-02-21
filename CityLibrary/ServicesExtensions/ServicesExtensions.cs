@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using MediatR;
 
 namespace CityLibrary.ServicesExtensions
 {
@@ -25,6 +26,7 @@ namespace CityLibrary.ServicesExtensions
         {
             services.AddCustomJwtService(appSetting.TokenOptions);
             services.AddHttpContextAccessor();
+            services.AddMediatR(typeof(MapsterMapping).Assembly);
 
             services.AddDbContext<AppDbContext>(options =>
             {
@@ -56,16 +58,11 @@ namespace CityLibrary.ServicesExtensions
               .Where(c => c.Name.EndsWith("Repo"))
               .AsPublicImplementedInterfaces(ServiceLifetime.Scoped);
 
-            services.RegisterAssemblyPublicNonGenericClasses(assembliesToScan)
-              .Where(c => c.Name.EndsWith("Service"))
-              .AsPublicImplementedInterfaces(ServiceLifetime.Scoped);
-
             services.AddTransientServices(assembliesToScan);
         }
 
         private static void AddTransientServices(this IServiceCollection services, Assembly[] assembliesToScan)
         {
-            services.AddTransient(typeof(GenericNotFoundFilter<>));
             services.RegisterAssemblyPublicNonGenericClasses(assembliesToScan)
               .Where(c => c.Name.EndsWith("Filter"))
               .AsPublicImplementedInterfaces(ServiceLifetime.Transient);

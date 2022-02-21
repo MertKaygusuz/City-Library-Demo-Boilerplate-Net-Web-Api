@@ -1,7 +1,8 @@
 ﻿using CityLibrary.ActionFilters.Interfaces;
+using CityLibraryApi.Commands.Auth;
 using CityLibraryApi.Dtos.Authentication;
 using CityLibraryApi.Dtos.Token.Records;
-using CityLibraryApi.Services.Token.Interfaces;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -14,29 +15,29 @@ namespace CityLibrary.Controllers.Auth
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly IAuthenticationService _authenticationService;
-        public AuthController(IAuthenticationService authenticationService)
+        private readonly IMediator _mediator;
+        public AuthController(IMediator mediator)
         {
-            _authenticationService = authenticationService;
+            _mediator = mediator;
         }
 
         [HttpPost]
         public async Task<ReturnTokenRecord> Login(LoginDto dto)
         {
-            return await _authenticationService.LoginAsync(dto);
+            return await _mediator.Send(new LoginCommand(dto));
         }
 
         [HttpPost]
         public async Task Logout([FromForm] string refreshToken)
         {
-            await _authenticationService.LogoutAsync(refreshToken);
+            await _mediator.Send(new LogoutCommand(refreshToken));
         }
 
         [HttpPut]
         [ServiceFilter(typeof(IRefreshLoginFilter))]
         public async Task<ReturnTokenRecord> ReLoginWithRefreshToken([FromForm] string refreshToken)
         {
-            return await _authenticationService.RefreshLoginTokenAsync(refreshToken);
+            return await _mediator.Send(new RefreshLoginTokenCommand(refreshToken));
         }
     }
 }

@@ -1,7 +1,7 @@
-﻿using CityLibrary.ActionFilters.Base;
+﻿using CityLibraryApi.Commands.Book;
 using CityLibraryApi.Dtos.Book;
-using CityLibraryApi.Services.Book.Interfaces;
-using CityLibraryInfrastructure.Entities;
+using CityLibraryApi.Queries.Book;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,38 +17,36 @@ namespace CityLibrary.Controllers.Book
     [Authorize(Roles = "Admin")]
     public class BookController : ControllerBase
     {
-        private readonly IBookService _bookService;
-        public BookController(IBookService bookService)
+        private readonly IMediator _mediator;
+        public BookController(IMediator mediator)
         {
-            _bookService = bookService;
+            _mediator = mediator;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAllBooks()
         {
-            var result = await _bookService.GetAllBooks();
+            var result = await _mediator.Send(new GetAllBooksQuery());
             return Ok(result);
         }
 
         [HttpPost]
         public async Task<int> BookRegister(RegisterBookDto dto)
         {
-            return await _bookService.BookRegisterAsync(dto);
+            return await _mediator.Send(new BookRegisterCommand(dto));
         }
 
         [HttpPut]
-        [ServiceFilter(typeof(GenericNotFoundFilter<IBookService>))]
         public async Task<IActionResult> BookInfoUpdate(UpdateBookDto dto)
         {
-            await _bookService.UpdateBookInfoAsync(dto);
+            await _mediator.Send(new BookRegisterCommand(dto));
             return Ok();
         }
 
         [HttpDelete]
-        [ServiceFilter(typeof(GenericNotFoundFilter<IBookService>))]
         public async Task<IActionResult> DeleteBook(DeleteBookDto dto)
         {
-            await _bookService.DeleteBookAsync(dto);
+            await _mediator.Send(new BookDeleteCommand(dto));
             return Ok();
         }
     }

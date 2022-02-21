@@ -1,8 +1,7 @@
-﻿using CityLibrary.ActionFilters.Base;
-using CityLibraryApi.Dtos.BookReservation;
-using CityLibraryApi.Services.Book.Interfaces;
-using CityLibraryApi.Services.BookReservation.Interfaces;
-using CityLibraryApi.Services.Member.Interfaces;
+﻿using CityLibraryApi.Dtos.BookReservation;
+using CityLibraryApi.Queries.Book;
+using CityLibraryApi.Queries.BookReservation;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -18,74 +17,70 @@ namespace CityLibrary.Controllers.Report
     [Authorize(Roles = "Admin")]
     public class ReportController : ControllerBase
     {
-        private readonly IBookReservationService _bookReservationService;
-        private readonly IBookService _bookService;
-        public ReportController(IBookReservationService bookReservationService, IBookService bookService)
+        private readonly IMediator _mediator;
+        public ReportController(IMediator mediator)
         {
-            _bookReservationService = bookReservationService;
-            _bookService = bookService;
+            _mediator = mediator;
         }
 
         [HttpGet]
         public async Task<int> GetDistinctBookTitleNumber()
         {
-            return await _bookService.GetNumberOfDistinctTitleAsync();
+            return await _mediator.Send(new GetNumberOfDistinctTitleQuery());
         }
 
         [HttpGet]
         public async Task<int> GetDistinctAuthorsNumber()
         {
-            return await _bookService.GetNumberOfAuthorsFromBookTableAsync();
+            return await _mediator.Send(new GetNumberOfAuthorsFromBookTableQuery());
         }
 
         [HttpPost]
         public async Task<IEnumerable<ActiveBookReservationsResponseDto>> GetActiveBookReservations(ActiveBookReservationsFilterDto dto)
         {
-            return await _bookReservationService.GetAllActiveBookReservationsAsync(dto);
+            return await _mediator.Send(new GetAllActiveBookReservationsQuery(dto));
         }
 
         [HttpGet]
         public async Task<IEnumerable<NumberOfBooksPerTitleAndEditionNumberResponseDto>> GetNumberOfBooksPerTitleAndEditionNumber()
         {
-            return await _bookReservationService.GetNumberOfBooksPerTitleAndEditionNumberAsync();
+            return await _mediator.Send(new GetNumberOfBooksPerTitleAndEditionNumberQuery());
         }
 
         [HttpGet]
         public async Task<IEnumerable<NumberOfBooksReservedByMembersResponseDto>> GetNumberOfBooksReservedPerMembers()
         {
-            return await _bookReservationService.GetNumberOfBooksReservedPerMembersAsync();
+            return await _mediator.Send(new GetNumberOfBooksReservedPerMembersQuery());
         }
 
         [HttpPost]
         public async Task<IEnumerable<ReservationHistoryBookResponseDto>> GetReservationHistoryPerBook(ReservationHistoryPerBookDto dto)
         {
-            return await _bookReservationService.GetReservationHistoryPerBookAsync(dto);
+            return await _mediator.Send(new GetReservationHistoryPerBookQuery(dto));
         }
 
         [HttpPost]
         public async Task<IEnumerable<ReservationHistoryMemberResponseDto>> GetReservationHistoryPerMember(ReservationHistoryPerMemberDto dto)
         {
-            return await _bookReservationService.GetReservationHistoryPerMemberAsync(dto);
+            return await _mediator.Send(new GetReservationHistoryPerMemberQuery(dto));
         }
 
         [HttpPost]
-        [ServiceFilter(typeof(GenericNotFoundFilter<IBookService>))]
         public async Task<IEnumerable<ReservationHistoryBookResponseDto>> GetReservationHistoryByBook(ReservationHistoryBookDto dto)
         {
-            return await _bookReservationService.GetReservationHistoryByBookAsync(dto);
+            return await _mediator.Send(new GetReservationHistoryByBookQuery(dto));
         }
 
         [HttpPost]
-        [ServiceFilter(typeof(GenericNotFoundFilter<IMemberService>))]
         public async Task<IEnumerable<ReservationHistoryMemberResponseDto>> GetReservationHistoryByMember(ReservationHistoryMemberDto dto)
         {
-            return await _bookReservationService.GetReservationHistoryByMemberAsync(dto);
+            return await _mediator.Send(new GetReservationHistoryByMemberQuery(dto));
         }
 
         [HttpPost]
-        public IEnumerable<DateTime> GetReservedBooksEstimatedReturnDates(ReservedBookEstimatedReturnDatesDto dto)
+        public async Task<IEnumerable<DateTime>> GetReservedBooksEstimatedReturnDates(ReservedBookEstimatedReturnDatesDto dto)
         {
-            return _bookReservationService.GetReservedBooksEstimatedReturnDates(dto);
+            return await _mediator.Send(new GetReservedBooksEstimatedReturnDatesQuery(dto));
         }
     }
 }

@@ -1,7 +1,8 @@
 ﻿using CityLibrary.ActionFilters.Base;
 using CityLibrary.ActionFilters.Interfaces;
+using CityLibraryApi.Commands.Member;
 using CityLibraryApi.Dtos.Member;
-using CityLibraryApi.Services.Member.Interfaces;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,32 +18,30 @@ namespace CityLibrary.Controllers.Member
     [Authorize]
     public class MemberController : ControllerBase
     {
-        private readonly IMemberService _memberService;
-        public MemberController(IMemberService memberService)
+        private readonly IMediator _mediator;
+        public MemberController(IMediator mediator)
         {
-            _memberService = memberService;
+            _mediator = mediator;
         }
 
         [HttpPost]
-        [ServiceFilter(typeof(IUserNameCheckFilter))]
         [AllowAnonymous]
         public async Task<string> Register(RegistrationDto dto)
         {
-            return await _memberService.RegisterAsync(dto);
+            return await _mediator.Send(new RegisterCommand(dto));
         }
 
         [HttpPut]
-        [ServiceFilter(typeof(GenericNotFoundFilter<IMemberService>))]
         [Authorize(Roles = "Admin")]
         public async Task AdminUpdateMember(RegistrationDto dto)
         {
-            await _memberService.AdminUpdateMemberAsync(dto);
+            await _mediator.Send(new AdminUpdateMemberCommand(dto));
         }
 
         [HttpPut]
         public async Task MemberSelfUpdate(MemberSelfUpdateDto dto)
         {
-            await _memberService.MemberSelfUpdateAsync(dto);
+            await _mediator.Send(new MemberSelfUpdateCommand(dto));
         }
     }
 }

@@ -1,6 +1,6 @@
-﻿using CityLibrary.ActionFilters.Interfaces;
+﻿using CityLibraryApi.Commands.BookReservation;
 using CityLibraryApi.Dtos.BookReservation;
-using CityLibraryApi.Services.BookReservation.Interfaces;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -14,24 +14,22 @@ namespace CityLibrary.Controllers.Reservation
     [ApiController]
     public class BookReservationController : ControllerBase
     {
-        private readonly IBookReservationService _bookReservationService;
-        public BookReservationController(IBookReservationService bookReservationService)
+        private readonly IMediator _mediator;
+        public BookReservationController(IMediator mediator)
         {
-            _bookReservationService = bookReservationService;
+            _mediator = mediator;
         }
 
         [HttpPost]
-        [ServiceFilter(typeof(IAssigningBookFilter))]
         public async Task AssignBookToMember(AssignBookToMemberDto dto)
         {
-            await _bookReservationService.AssignBookToMemberAsync(dto);
+            await _mediator.Send(new AssignBookToMemberCommand(dto));
         }
 
         [HttpPost]
-        [ServiceFilter(typeof(IUnAssigningBookFilter))]
         public async Task UnAssignBookFromUser(AssignBookToMemberDto dto)
         {
-            await _bookReservationService.UnAssignBookFromUserAsync(dto);
+            await _mediator.Send(new UnAssignBookFromUserCommand(dto));
         }
     }
 }
