@@ -4,7 +4,7 @@ using CityLibrary.ServicesExtensions;
 using CityLibraryApi.MapperConfigurations;
 using CityLibraryInfrastructure.AppSettings;
 using CityLibraryInfrastructure.ExceptionHandling;
-using CityLibraryInfrastructure.TokenExtensions;
+using CityLibraryInfrastructure.Extensions.TokenExtensions;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;

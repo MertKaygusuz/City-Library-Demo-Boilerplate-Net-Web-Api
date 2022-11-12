@@ -21,7 +21,7 @@ namespace CityLibrary.ActionFilters.Classes
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             AssignBookToMemberDto modelVal = context.ActionArguments["dto"] as AssignBookToMemberDto;
-            var memberExistTask = _bookReservationService.CheckIfMemberExistsAsync(modelVal.UserName);
+            var memberExistTask = _bookReservationService.CheckIfMemberExistsAsync(modelVal!.UserName);
             var bookExistTask = _bookReservationService.CheckIfBookExistsAsync(modelVal.BookId);
 
             await Task.WhenAll(memberExistTask, bookExistTask); //parallel request to db.

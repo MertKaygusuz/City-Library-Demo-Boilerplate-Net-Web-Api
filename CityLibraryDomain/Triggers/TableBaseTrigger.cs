@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using static CityLibraryInfrastructure.TokenExtensions.AccesInfoFromToken;
+using static CityLibraryInfrastructure.Extensions.TokenExtensions.AccesInfoFromToken;
 
 namespace CityLibraryDomain.Triggers
 {

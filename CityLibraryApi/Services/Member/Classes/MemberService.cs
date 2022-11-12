@@ -6,7 +6,7 @@ using CityLibraryInfrastructure.Entities;
 using CityLibraryInfrastructure.Extensions;
 using CityLibraryInfrastructure.MapperConfigurations;
 using CityLibraryInfrastructure.Repositories;
-using static CityLibraryInfrastructure.TokenExtensions.AccesInfoFromToken;
+using static CityLibraryInfrastructure.Extensions.TokenExtensions.AccesInfoFromToken;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

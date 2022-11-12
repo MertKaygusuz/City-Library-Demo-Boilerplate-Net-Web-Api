@@ -21,7 +21,7 @@ namespace CityLibrary.ActionFilters.Classes
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             RegistrationDto modelVal = context.ActionArguments["dto"] as RegistrationDto;
-            bool doesExist = await _memberService.DoesEntityExistAsync(modelVal.UserName);
+            bool doesExist = await _memberService.DoesEntityExistAsync(modelVal!.UserName);
             if (doesExist)
             {
                 var err = new ActionFilterErrorDto();

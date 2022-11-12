@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace CityLibraryInfrastructure.DbBase
@@ -12,9 +11,9 @@ namespace CityLibraryInfrastructure.DbBase
         Task InsertAsync(T entity);
         Task InsertManyAsyc(IEnumerable<T> entities);
         void Update(T entity);
-        T DeleteById(S Id);
+        T DeleteById(S id);
 
-        Task<T> DeleteByIdAsync(S Id);
+        Task<T> DeleteByIdAsync(S id);
 
         T Delete(T objectToBeDeleted);
 
@@ -26,9 +25,9 @@ namespace CityLibraryInfrastructure.DbBase
 
         IQueryable<T> GetDataWithLinqExp(Expression<Func<T, bool>> whereClause, params string[] navObjects);
 
-        Task<T> GetByIdAsync(S Id);
+        Task<T> GetByIdAsync(S id);
 
-        Task<bool> DoesEntityExistAsync(S Id);
+        Task<bool> DoesEntityExistAsync(S id);
 
         Task<int> CountAsync(Expression<Func<T, bool>> whereClause = null);
 
@@ -38,7 +37,7 @@ namespace CityLibraryInfrastructure.DbBase
 
         long LongCount(Expression<Func<T, bool>> whereClause = null);
 
-        T GetById(S Id);
+        T GetById(S id);
 
         Task SaveChangesAsync();
 

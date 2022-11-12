@@ -33,10 +33,10 @@ namespace CityLibraryDomain.DbBase.Repositories.Base
             _dbcontext.Update(entity);
         }
 
-        public virtual T DeleteById(S Id)
+        public virtual T DeleteById(S id)
         {
             var set = _dbcontext.Set<T>();
-            return set.Remove(set.Find(Id)).Entity;
+            return set.Remove(set.Find(id)!).Entity;
         }
 
         public virtual void DeleteMany(IEnumerable<T> objectsToBeDeleted)
@@ -44,10 +44,10 @@ namespace CityLibraryDomain.DbBase.Repositories.Base
             _dbcontext.Set<T>().RemoveRange(objectsToBeDeleted);
         }
 
-        public virtual async Task<T> DeleteByIdAsync(S Id)
+        public virtual async Task<T> DeleteByIdAsync(S id)
         {
             var set = _dbcontext.Set<T>();
-            return set.Remove(await set.FindAsync(Id)).Entity;
+            return set.Remove((await set.FindAsync(id))!).Entity;
         }
 
         public virtual T Delete(T objectToBeDeleted)
@@ -80,14 +80,14 @@ namespace CityLibraryDomain.DbBase.Repositories.Base
             return query;
         }
 
-        public async virtual Task<T> GetByIdAsync(S Id)
+        public async virtual Task<T> GetByIdAsync(S id)
         {
-            return await _dbcontext.FindAsync<T>(Id);
+            return await _dbcontext.FindAsync<T>(id);
         }
 
-        public async virtual Task<bool> DoesEntityExistAsync(S Id)
+        public async virtual Task<bool> DoesEntityExistAsync(S id)
         {
-            return await GetByIdAsync(Id) is not null;
+            return await GetByIdAsync(id) is not null;
         }
 
         public virtual async Task<int> CountAsync(Expression<Func<T, bool>> whereClause = null)
@@ -122,9 +122,9 @@ namespace CityLibraryDomain.DbBase.Repositories.Base
             return _dbcontext.Set<T>().LongCount(whereClause);
         }
 
-        public virtual T GetById(S Id)
+        public virtual T GetById(S id)
         {
-            return _dbcontext.Find<T>(Id);
+            return _dbcontext.Find<T>(id);
         }
 
         public virtual async Task SaveChangesAsync()

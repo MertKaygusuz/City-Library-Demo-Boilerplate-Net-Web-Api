@@ -21,20 +21,20 @@ namespace CityLibrary.ActionFilters.Base
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             var actionArgument = context.ActionArguments["dto"];
-            Type modelType = actionArgument.GetType();
+            Type modelType = actionArgument!.GetType();
 
             string modelIdPropName = modelType.GetProperties()
                                               .First(x => Attribute.IsDefined(x, typeof(KeyAttribute)))
                                               .Name;
 
-            var Id = (IConvertible)modelType.GetProperty(modelIdPropName)
+            var Id = (IConvertible)modelType.GetProperty(modelIdPropName)!
                                             .GetValue(actionArgument);
 
             bool doesExist = await _service.DoesEntityExistAsync(Id);
 
             if (!doesExist)
             {
-                string fieldName = modelType.GetProperty(modelIdPropName)
+                string fieldName = modelType.GetProperty(modelIdPropName)!
                                             .GetCustomAttributes(false)
                                             .OfType<DisplayNameAttribute>()
                                             .First()

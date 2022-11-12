@@ -44,7 +44,7 @@ namespace CityLibraryApi.Services.Token.Classes
                 RefreshTokenKey = CreateRefreshTokenKey(),
                 AccessTokenExpiration = accessTokenExpiration,
                 RefreshTokenExpiration = refreshTokenExpiration,
-                ClientIp = _httpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString(), //TODO: simplify
+                ClientIp = Convert.ToString(_httpContextAccessor.HttpContext!.Connection.RemoteIpAddress), //TODO: simplify
                 ClientAgent = _httpContextAccessor.HttpContext.Request.Headers["User-Agent"],
                 MemberName = dto.UserName
             };

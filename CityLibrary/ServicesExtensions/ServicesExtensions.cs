@@ -29,7 +29,7 @@ namespace CityLibrary.ServicesExtensions
             services.AddDbContext<AppDbContext>(options =>
             {
                 var triggerAssembly = Assembly.GetAssembly(typeof(AppDbContext));
-                options.UseTriggers(triggerOptions => triggerOptions.AddAssemblyTriggers(triggerAssembly));
+                options.UseTriggers(triggerOptions => triggerOptions.AddAssemblyTriggers(triggerAssembly!));
                 options.UseInMemoryDatabase(appSetting.DbConnectionString);
             });
 

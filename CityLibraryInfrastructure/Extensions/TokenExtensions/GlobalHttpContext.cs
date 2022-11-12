@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace CityLibraryInfrastructure.TokenExtensions
+namespace CityLibraryInfrastructure.Extensions.TokenExtensions
 {
    
     public static class GlobalHttpContext
