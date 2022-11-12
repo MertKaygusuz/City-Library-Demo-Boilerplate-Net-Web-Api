@@ -76,7 +76,7 @@ app.UseCors(opts =>
 app.UseExceptionHandler(a => a.Run(async context =>
 {
     var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();
-    var exception = exceptionHandlerPathFeature.Error;
+    var exception = exceptionHandlerPathFeature!.Error;
 
     if (exception is CustomHttpException exception1)
     {
