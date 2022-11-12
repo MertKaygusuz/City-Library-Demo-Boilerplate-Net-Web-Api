@@ -9,22 +9,19 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.Extensions.Configuration;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-ConfigurationManager configuration = builder.Configuration;
-IWebHostEnvironment environment = builder.Environment;
+var configuration = builder.Configuration;
+// IWebHostEnvironment environment = builder.Environment;
 
 builder.Services.Configure<AppSetting>(configuration);
 var appSetting = configuration.Get<AppSetting>();
 
-builder.Services.AddMvcCore().AddFluentValidation(fv =>
-{
-    fv.RegisterValidatorsFromAssemblyContaining<MapsterMapping>();
-    fv.ValidatorOptions.CascadeMode = CascadeMode.Continue;
-});
+ValidatorOptions.Global.DefaultRuleLevelCascadeMode = CascadeMode.Continue;
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssemblyContaining<MapsterMapping>();
 
 builder.Services.AddRangeCustomServices(appSetting);
 builder.Services.AddControllers().AddJsonOptions(options =>
