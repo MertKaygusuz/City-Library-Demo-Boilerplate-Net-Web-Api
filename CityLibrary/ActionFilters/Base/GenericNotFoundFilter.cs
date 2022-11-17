@@ -7,15 +7,19 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using CityLibraryInfrastructure.Resources;
+using Microsoft.Extensions.Localization;
 
 namespace CityLibrary.ActionFilters.Base
 {
     public class GenericNotFoundFilter<T> : IAsyncActionFilter where T : IBaseCheckService
     {
         private readonly T _service;
-        public GenericNotFoundFilter(T service)
+        private readonly IStringLocalizer<DisplayNameResource> _localizer;
+        public GenericNotFoundFilter(T service, IStringLocalizer<DisplayNameResource> localizer)
         {
             _service = service;
+            _localizer = localizer;
         }
 
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
@@ -27,10 +31,10 @@ namespace CityLibrary.ActionFilters.Base
                                               .First(x => Attribute.IsDefined(x, typeof(KeyAttribute)))
                                               .Name;
 
-            var Id = (IConvertible)modelType.GetProperty(modelIdPropName)!
+            var id = (IConvertible)modelType.GetProperty(modelIdPropName)!
                                             .GetValue(actionArgument);
 
-            bool doesExist = await _service.DoesEntityExistAsync(Id);
+            bool doesExist = await _service.DoesEntityExistAsync(id);
 
             if (!doesExist)
             {
@@ -40,7 +44,9 @@ namespace CityLibrary.ActionFilters.Base
                                             .First()
                                             .DisplayName;
 
-                context.Result = new NotFoundObjectResult($"{fieldName} was not found.");
+                string localizedFieldName = _localizer[fieldName];
+
+                context.Result = new NotFoundObjectResult(string.Format(_localizer["Display_Name_Not_Found"], localizedFieldName));
                 return;
             }
             else

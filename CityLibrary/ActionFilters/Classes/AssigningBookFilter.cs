@@ -8,15 +8,19 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CityLibraryInfrastructure.Resources;
+using Microsoft.Extensions.Localization;
 
 namespace CityLibrary.ActionFilters.Classes
 {
     public class AssigningBookFilter : IAssigningBookFilter
     {
         private readonly IBookReservationService _bookReservationService;
-        public AssigningBookFilter(IBookReservationService bookReservationService)
+        private readonly IStringLocalizer<ActionFiltersResource> _localizer;
+        public AssigningBookFilter(IBookReservationService bookReservationService, IStringLocalizer<ActionFiltersResource> localizer)
         {
             _bookReservationService = bookReservationService;
+            _localizer = localizer;
         }
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
@@ -33,10 +37,10 @@ namespace CityLibrary.ActionFilters.Classes
             {
                 var err = new ActionFilterErrorDto();
                 if (!memberExist)
-                    err.Errors.Add(nameof(modelVal.UserName), new List<string>() { $"User name does not exist on system." });
+                    err.Errors.Add(nameof(modelVal.UserName), new List<string>() { _localizer["User_Name_Not_Exist"] });
 
                 if(!bookExist)
-                    err.Errors.Add(nameof(modelVal.BookId), new List<string>() { $"Book does not exist on system." });
+                    err.Errors.Add(nameof(modelVal.BookId), new List<string>() { _localizer["Book_Not_Exist"] });
 
                 context.Result = new ObjectResult(err)
                 {
@@ -50,7 +54,7 @@ namespace CityLibrary.ActionFilters.Classes
             if(isThereAnyAvailableBook is false)
             {
                 var err = new ActionFilterErrorDto();
-                err.Errors.Add(nameof(modelVal.BookId), new List<string>() { $"Sorry! This book is not available now." });
+                err.Errors.Add(nameof(modelVal.BookId), new List<string>() { _localizer["Book_Not_Available"] });
                 context.Result = new ObjectResult(err)
                 {
                     StatusCode = err.status

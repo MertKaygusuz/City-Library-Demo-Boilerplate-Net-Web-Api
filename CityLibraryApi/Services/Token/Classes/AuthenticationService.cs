@@ -12,6 +12,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CityLibraryInfrastructure.Resources;
+using Microsoft.Extensions.Localization;
 
 namespace CityLibraryApi.Services.Token.Classes
 {
@@ -21,8 +23,10 @@ namespace CityLibraryApi.Services.Token.Classes
         private readonly IRefreshTokenService _refreshTokenService;
         private readonly IAccessTokenService _accessTokenService;
         private readonly IMemberService _memberService;
+        private readonly IStringLocalizer<ExceptionsResource> _localizer;
         public AuthenticationService(
             ILogger<AuthenticationService> logger,
+            IStringLocalizer<ExceptionsResource> localizer,
             IMemberService memberService,
             IRefreshTokenService refreshTokenService,
             IAccessTokenService accessTokenService)
@@ -31,12 +35,13 @@ namespace CityLibraryApi.Services.Token.Classes
             _refreshTokenService = refreshTokenService;
             _accessTokenService = accessTokenService;
             _memberService = memberService;
+            _localizer = localizer;
         }
         public async Task<ReturnTokenRecord> LoginAsync(LoginDto loginDto)
         {
             var member = await _memberService.GetMemberByUserNameAsync(loginDto.UserName);
             if (member is null || loginDto.Password.VerifyPasswordHash(member.Password) is false)
-                throw new CustomBusinessException("User name or password is incorrect.");
+                throw new CustomBusinessException(_localizer["Login_Fail"]);
 
             CreateTokenDto createTokenDto = new()
             {
@@ -78,7 +83,7 @@ namespace CityLibraryApi.Services.Token.Classes
                 throw new CustomBusinessException("Refresh token could not be found!");
 
             if (DateTime.Compare(DateTime.Now, oldToken.DueTime) > 1)
-                throw new CustomStatusException("Session timeout! Please relogin.", 401);
+                throw new CustomStatusException(_localizer["Session_Timeout"], 401);
             
 
             CreateTokenDto createTokenDto = new()

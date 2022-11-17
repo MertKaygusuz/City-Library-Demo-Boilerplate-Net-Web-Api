@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+            
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="Password_Null" xml:space="preserve">
+        <value>Parola alanı boş bırakılamaz.</value>
+    </data>
+    <data name="Password_Space" xml:space="preserve">
+        <value>Parola boşluk karakteri içeremez.</value>
+    </data>
+    <data name="Password_Min_Length" xml:space="preserve">
+        <value>Parola en az {0} karakterden oluşmalıdır.</value>
+    </data>
+    <data name="Member_Not_Found" xml:space="preserve">
+        <value>Kullanıcı bulunamadı. Sisteme giriş yaptığınızdan emin olunuz.</value>
+    </data>
+    <data name="No_Reservation_On_Search" xml:space="preserve">
+        <value>Aranan kitaba dair rezervasyon kaydı bulunamadı.</value>
+    </data>
+    <data name="Active_Book_Reservation_Not_Found" xml:space="preserve">
+        <value>Aktif kitap rezervasyonu bulunamadı.</value>
+    </data>
+    <data name="Session_Timeout" xml:space="preserve">
+        <value>Oturum süreniz sonlandı, lütfen tekrar giriş yapınız.</value>
+    </data>
+    <data name="Login_Fail" xml:space="preserve">
+        <value>Kullanıcı adı veya parola hatalı.</value>
+    </data>
+</root>

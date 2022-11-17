@@ -1,14 +1,19 @@
+using System.Globalization;
 using System.Runtime.ExceptionServices;
 using System.Text.Json.Serialization;
 using CityLibrary.ServicesExtensions;
 using CityLibraryApi.MapperConfigurations;
 using CityLibraryInfrastructure.AppSettings;
 using CityLibraryInfrastructure.ExceptionHandling;
+using CityLibraryInfrastructure.Extensions;
 using CityLibraryInfrastructure.Extensions.TokenExtensions;
+using CityLibraryInfrastructure.Resources;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.Extensions.Localization;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,6 +23,25 @@ var configuration = builder.Configuration;
 
 builder.Services.Configure<AppSetting>(configuration);
 var appSetting = configuration.Get<AppSetting>();
+
+builder.Services.AddLocalization();
+
+builder.Services.Configure<RequestLocalizationOptions>(opt =>
+{
+    var supportedCultures = new List<CultureInfo>
+    {
+        new ("en-GB"),
+        new ("tr-TR")
+    };
+    opt.DefaultRequestCulture = new RequestCulture("en-GB");
+    opt.SupportedCultures = supportedCultures;
+    opt.SupportedUICultures = supportedCultures;
+
+    opt.RequestCultureProviders = new List<IRequestCultureProvider>
+    {
+        new AcceptLanguageHeaderRequestCultureProvider()
+    };
+});
 
 ValidatorOptions.Global.DefaultRuleLevelCascadeMode = CascadeMode.Continue;
 builder.Services.AddFluentValidationAutoValidation();
@@ -29,6 +53,9 @@ builder.Services.AddControllers().AddJsonOptions(options =>
     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
     options.JsonSerializerOptions.WriteIndented = true;
 });
+
+GenerateAndVerifyPasswords.Localizer =
+    builder.Services.BuildServiceProvider().GetService<IStringLocalizer<ExceptionsResource>>();
 
 builder.Services.AddSwaggerGen(c =>
 {
@@ -65,6 +92,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "CityLibrary v1"));
 }
+
+app.UseRequestLocalization();
 
 app.UseStaticHttpContext();
 

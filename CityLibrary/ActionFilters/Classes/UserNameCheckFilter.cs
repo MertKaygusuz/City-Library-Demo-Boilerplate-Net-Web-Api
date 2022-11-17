@@ -8,15 +8,19 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CityLibraryInfrastructure.Resources;
+using Microsoft.Extensions.Localization;
 
 namespace CityLibrary.ActionFilters.Classes
 {
     public class UserNameCheckFilter : IUserNameCheckFilter
     {
         private readonly IMemberService _memberService;
-        public UserNameCheckFilter(IMemberService memberService)
+        private readonly IStringLocalizer<ActionFiltersResource> _localizer;
+        public UserNameCheckFilter(IMemberService memberService, IStringLocalizer<ActionFiltersResource> localizer)
         {
             _memberService = memberService;
+            _localizer = localizer;
         }
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
@@ -25,7 +29,7 @@ namespace CityLibrary.ActionFilters.Classes
             if (doesExist)
             {
                 var err = new ActionFilterErrorDto();
-                err.Errors.Add(nameof(modelVal.UserName), new List<string>() { $"This user name ({modelVal.UserName}) has been already taken." });
+                err.Errors.Add(nameof(modelVal.UserName), new List<string>() { string.Format(_localizer["User_Name_Check"], modelVal.UserName) });
                 context.Result = new ObjectResult(err)
                 {
                     StatusCode = err.status

@@ -14,6 +14,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CityLibraryInfrastructure.ExceptionHandling;
+using CityLibraryInfrastructure.Resources;
+using Microsoft.Extensions.Localization;
 
 namespace CityLibraryApi.Services.Member.Classes
 {
@@ -23,13 +25,19 @@ namespace CityLibraryApi.Services.Member.Classes
         private readonly IRolesRepo _rolesRepo;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICustomMapper _mapper;
+        private readonly IStringLocalizer<ExceptionsResource> _localizer;
         private readonly HashSet<string> _defaultMemberRoleNames = new() { "User" };
-        public MemberService(IMembersRepo membersRepo, IRolesRepo rolesRepo, IUnitOfWork unitOfWork, ICustomMapper mapper)
+        public MemberService(IMembersRepo membersRepo, 
+                             IRolesRepo rolesRepo,
+                             IStringLocalizer<ExceptionsResource> localizer,
+                             IUnitOfWork unitOfWork, 
+                             ICustomMapper mapper)
         {
             _membersRepo = membersRepo;
             _rolesRepo = rolesRepo;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _localizer = localizer;
         }
         public async Task<Members> GetMemberByUserNameAsync(string userName)
         {
@@ -64,7 +72,7 @@ namespace CityLibraryApi.Services.Member.Classes
         {
             string myUserName = GetMyUserId();
             if (string.IsNullOrEmpty(myUserName) || !await _membersRepo.DoesEntityExistAsync(myUserName))
-                throw new CustomBusinessException("Member could not be found. Ensure that you are loged in.");
+                throw new CustomBusinessException(_localizer["Member_Not_Found"]);
 
             var registrationDto = _mapper.Map<MemberSelfUpdateDto, RegistrationDto>(selfUpdateDto);
             registrationDto.UserName = myUserName;

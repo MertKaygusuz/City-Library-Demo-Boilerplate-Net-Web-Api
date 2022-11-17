@@ -13,30 +13,33 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CityLibraryInfrastructure.Resources;
+using Microsoft.Extensions.Localization;
 
 namespace CityLibraryApi.Services.BookReservation.Classes
 {
     public class BookReservationService : IBookReservationService
     {
-        private readonly ICustomMapper _customMapper;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IStringLocalizer<ExceptionsResource> _localizer;
         private readonly IActiveBookReservationsRepo _activeBookReservationsRepo;
         private readonly IBookReservationHistoriesRepo _bookReservationHistoriesRepo;
         private readonly IMembersRepo _membersRepo;
         private readonly IBooksRepo _booksRepo;
-        public BookReservationService(ICustomMapper customMapper,
+        public BookReservationService(
             IUnitOfWork unitOfWork,
+            IStringLocalizer<ExceptionsResource> localizer,
             IActiveBookReservationsRepo activeBookReservationsRepo,
             IBookReservationHistoriesRepo bookReservationHistoriesRepo,
             IMembersRepo membersRepo,
             IBooksRepo booksRepo)
         {
-            _customMapper = customMapper;
             _unitOfWork = unitOfWork;
             _activeBookReservationsRepo = activeBookReservationsRepo;
             _bookReservationHistoriesRepo = bookReservationHistoriesRepo;
             _membersRepo = membersRepo;
             _booksRepo = booksRepo;
+            _localizer = localizer;
         }
 
         public async Task AssignBookToMemberAsync(AssignBookToMemberDto dto)
@@ -235,12 +238,12 @@ namespace CityLibraryApi.Services.BookReservation.Classes
         public IEnumerable<DateTime> GetReservedBooksEstimatedReturnDates(ReservedBookEstimatedReturnDatesDto dto)
         {
             var result = _activeBookReservationsRepo.GetDataWithLinqExp(x => x.BookId == dto.BookId)
-                                                    .AsEnumerable()
-                                                    .Select(x => x.AvailableAt)
-                                                    .OrderBy(x => x);
+                                                                                .AsEnumerable()
+                                                                                .Select(x => x.AvailableAt)
+                                                                                .Order();
                                                           
             if (!result.Any())
-                throw new CustomBusinessException("There is no resevartion of the searched book.");
+                throw new CustomBusinessException(_localizer["No_Reservation_On_Search"]);
 
             return result;
         }
@@ -258,7 +261,7 @@ namespace CityLibraryApi.Services.BookReservation.Classes
             bookRecord.AvailableCount += 1;
 
             if (activeReservation is null)
-                throw new CustomBusinessException("Active book reservation could not be found.");
+                throw new CustomBusinessException(_localizer["Active_Book_Reservation_Not_Found"]);
 
             var historyRecord = new BookReservationHistories()
             {
