@@ -1,13 +1,9 @@
-﻿using CityLibrary.ActionFilters.Base;
-using CityLibrary.ActionFilters.Interfaces;
+﻿using CityLibrary.ActionFilters.Interfaces;
 using CityLibraryApi.Dtos.Member;
 using CityLibraryApi.Services.Member.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using CityLibraryInfrastructure.ExceptionHandling.Dtos;
 using CityLibraryInfrastructure.Resources;
 using Microsoft.Extensions.Localization;
 
@@ -28,11 +24,11 @@ namespace CityLibrary.ActionFilters.Classes
             bool doesExist = await _memberService.DoesEntityExistAsync(modelVal!.UserName);
             if (doesExist)
             {
-                var err = new ActionFilterErrorDto();
+                var err = new ErrorDto();
                 err.Errors.Add(nameof(modelVal.UserName), new List<string>() { string.Format(_localizer["User_Name_Check"], modelVal.UserName) });
                 context.Result = new ObjectResult(err)
                 {
-                    StatusCode = err.status
+                    StatusCode = err.Status
                 };
                 return;
             }

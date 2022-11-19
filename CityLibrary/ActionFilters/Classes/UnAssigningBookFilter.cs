@@ -1,13 +1,9 @@
-﻿using CityLibrary.ActionFilters.Base;
-using CityLibrary.ActionFilters.Interfaces;
+﻿using CityLibrary.ActionFilters.Interfaces;
 using CityLibraryApi.Dtos.BookReservation;
 using CityLibraryApi.Services.BookReservation.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using CityLibraryInfrastructure.ExceptionHandling.Dtos;
 using CityLibraryInfrastructure.Resources;
 using Microsoft.Extensions.Localization;
 
@@ -36,7 +32,7 @@ namespace CityLibrary.ActionFilters.Classes
 
             if (!(memberExist && bookExist))
             {
-                var err = new ActionFilterErrorDto();
+                var err = new ErrorDto();
                 if (!memberExist)
                     err.Errors.Add(nameof(modelVal.UserName), new List<string>() { _localizer["User_Name_Not_Exist"] });
 
@@ -45,7 +41,7 @@ namespace CityLibrary.ActionFilters.Classes
 
                 context.Result = new ObjectResult(err)
                 {
-                    StatusCode = err.status
+                    StatusCode = err.Status
                 };
                 return;
             }

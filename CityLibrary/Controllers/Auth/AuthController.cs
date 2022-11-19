@@ -21,6 +21,7 @@ namespace CityLibrary.Controllers.Auth
         }
 
         [HttpPost]
+        [ProducesResponseType(typeof(ReturnTokenRecord), StatusCodes.Status200OK)]
         public async Task<ReturnTokenRecord> Login(LoginDto dto)
         {
             return await _authenticationService.LoginAsync(dto);
@@ -34,6 +35,7 @@ namespace CityLibrary.Controllers.Auth
 
         [HttpPut]
         [ServiceFilter(typeof(IRefreshLoginFilter))]
+        [ProducesResponseType(typeof(ReturnTokenRecord), StatusCodes.Status200OK)]
         public async Task<ReturnTokenRecord> ReLoginWithRefreshToken([FromForm] string refreshToken)
         {
             return await _authenticationService.RefreshLoginTokenAsync(refreshToken);

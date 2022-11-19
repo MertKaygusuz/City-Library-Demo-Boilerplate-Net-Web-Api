@@ -31,6 +31,7 @@ namespace CityLibrary.Controllers.Book
         }
 
         [HttpPost]
+        [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
         public async Task<int> BookRegister(RegisterBookDto dto)
         {
             return await _bookService.BookRegisterAsync(dto);

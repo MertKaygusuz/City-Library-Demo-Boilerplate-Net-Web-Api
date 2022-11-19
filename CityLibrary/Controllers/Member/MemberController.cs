@@ -26,6 +26,7 @@ namespace CityLibrary.Controllers.Member
         [HttpPost]
         [ServiceFilter(typeof(IUserNameCheckFilter))]
         [AllowAnonymous]
+        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
         public async Task<string> Register(RegistrationDto dto)
         {
             return await _memberService.RegisterAsync(dto);

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CityLibraryInfrastructure.ExceptionHandling.Dtos;
 
 namespace CityLibrary.ActionFilters.Classes
 {
@@ -16,9 +17,10 @@ namespace CityLibrary.ActionFilters.Classes
 
             if (string.IsNullOrEmpty(refreshToken))
             {
-                context.Result = new ObjectResult($"Refresh token is empty.")
+                var err = new ErrorDto("Refresh token is empty.");
+                context.Result = new ObjectResult(err)
                 {
-                    StatusCode = 400
+                    StatusCode = err.Status
                 };
                 return;
             }

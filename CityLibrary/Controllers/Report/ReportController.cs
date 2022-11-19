@@ -39,30 +39,35 @@ namespace CityLibrary.Controllers.Report
         }
 
         [HttpPost]
+        [ProducesResponseType(typeof(IEnumerable<ActiveBookReservationsResponseDto>), StatusCodes.Status200OK)]
         public async Task<IEnumerable<ActiveBookReservationsResponseDto>> GetActiveBookReservations(ActiveBookReservationsFilterDto dto)
         {
             return await _bookReservationService.GetAllActiveBookReservationsAsync(dto);
         }
 
         [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<NumberOfBooksPerTitleAndEditionNumberResponseDto>), StatusCodes.Status200OK)]
         public async Task<IEnumerable<NumberOfBooksPerTitleAndEditionNumberResponseDto>> GetNumberOfBooksPerTitleAndEditionNumber()
         {
             return await _bookReservationService.GetNumberOfBooksPerTitleAndEditionNumberAsync();
         }
 
         [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<NumberOfBooksReservedByMembersResponseDto>), StatusCodes.Status200OK)]
         public async Task<IEnumerable<NumberOfBooksReservedByMembersResponseDto>> GetNumberOfBooksReservedPerMembers()
         {
             return await _bookReservationService.GetNumberOfBooksReservedPerMembersAsync();
         }
 
         [HttpPost]
+        [ProducesResponseType(typeof(IEnumerable<ReservationHistoryBookResponseDto>), StatusCodes.Status200OK)]
         public async Task<IEnumerable<ReservationHistoryBookResponseDto>> GetReservationHistoryPerBook(ReservationHistoryPerBookDto dto)
         {
             return await _bookReservationService.GetReservationHistoryPerBookAsync(dto);
         }
 
         [HttpPost]
+        [ProducesResponseType(typeof(IEnumerable<ReservationHistoryMemberResponseDto>), StatusCodes.Status200OK)]
         public async Task<IEnumerable<ReservationHistoryMemberResponseDto>> GetReservationHistoryPerMember(ReservationHistoryPerMemberDto dto)
         {
             return await _bookReservationService.GetReservationHistoryPerMemberAsync(dto);
@@ -70,6 +75,7 @@ namespace CityLibrary.Controllers.Report
 
         [HttpPost]
         [ServiceFilter(typeof(GenericNotFoundFilter<IBookService>))]
+        [ProducesResponseType(typeof(IEnumerable<ReservationHistoryBookResponseDto>), StatusCodes.Status200OK)]
         public async Task<IEnumerable<ReservationHistoryBookResponseDto>> GetReservationHistoryByBook(ReservationHistoryBookDto dto)
         {
             return await _bookReservationService.GetReservationHistoryByBookAsync(dto);
@@ -77,12 +83,14 @@ namespace CityLibrary.Controllers.Report
 
         [HttpPost]
         [ServiceFilter(typeof(GenericNotFoundFilter<IMemberService>))]
+        [ProducesResponseType(typeof(IEnumerable<ReservationHistoryMemberResponseDto>), StatusCodes.Status200OK)]
         public async Task<IEnumerable<ReservationHistoryMemberResponseDto>> GetReservationHistoryByMember(ReservationHistoryMemberDto dto)
         {
             return await _bookReservationService.GetReservationHistoryByMemberAsync(dto);
         }
 
         [HttpPost]
+        [ProducesResponseType(typeof(IEnumerable<DateTime>), StatusCodes.Status200OK)]
         public IEnumerable<DateTime> GetReservedBooksEstimatedReturnDates(ReservedBookEstimatedReturnDatesDto dto)
         {
             return _bookReservationService.GetReservedBooksEstimatedReturnDates(dto);

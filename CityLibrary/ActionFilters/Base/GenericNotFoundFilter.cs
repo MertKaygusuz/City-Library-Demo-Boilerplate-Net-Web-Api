@@ -6,7 +6,9 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
+using CityLibraryInfrastructure.ExceptionHandling.Dtos;
 using CityLibraryInfrastructure.Resources;
 using Microsoft.Extensions.Localization;
 
@@ -45,8 +47,10 @@ namespace CityLibrary.ActionFilters.Base
                                             .DisplayName;
 
                 string localizedFieldName = _localizer[fieldName];
+                string errorMesage = string.Format(_localizer["Display_Name_Not_Found"], localizedFieldName);
+                var errorObject = new ErrorDto(errorMesage, (int)HttpStatusCode.NotFound);
 
-                context.Result = new NotFoundObjectResult(string.Format(_localizer["Display_Name_Not_Found"], localizedFieldName));
+                context.Result = new NotFoundObjectResult(errorObject);
                 return;
             }
             else
