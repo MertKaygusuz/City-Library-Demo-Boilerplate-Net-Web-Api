@@ -12,9 +12,9 @@ namespace CityLibraryInfrastructure.Entities
     {
         public int HistoryId { get; set; }
 
-        public DateTime TakenDate { get; set; } //TODO:?
+        public DateTime ReturnDate { get; set; }
 
-        public DateTime GivenDate { get; set; } //TODO:?
+        public DateTime RecievedDate { get; set; }
 
         public string MemberId { get; set; }
 

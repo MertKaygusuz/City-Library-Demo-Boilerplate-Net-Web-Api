@@ -38,7 +38,7 @@ namespace CityLibraryDomain.Configurations
                 );
 
 
-            builder.HasMany(m => m.PreviousTakenBooks)
+            builder.HasMany(m => m.PreviouslyRecievedBooks)
                 .WithMany(b => b.MemberInfoForPreviousReservations)
                 .UsingEntity<BookReservationHistories>(
                     x => x.HasOne(brh => brh.Book).WithMany(b => b.BookReservationHistories).HasForeignKey(brh => brh.BookId),
@@ -46,7 +46,7 @@ namespace CityLibraryDomain.Configurations
                     x => x.HasKey(brh => brh.HistoryId)
                 );
 
-            builder.HasMany(m => m.TakenBooks)
+            builder.HasMany(m => m.RecievedBooks)
                 .WithMany(b => b.MemberInfoForActiveReservations)
                 .UsingEntity<ActiveBookReservations>(
                     x => x.HasOne(abr => abr.Book).WithMany(b => b.ActiveBookReservations).HasForeignKey(abr => abr.BookId),

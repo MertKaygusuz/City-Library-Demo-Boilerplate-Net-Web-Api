@@ -19,21 +19,21 @@ namespace CityLibraryDomain.Seeds
                      ReservationId = 1,
                      BookId = 1,
                      MemberId = "User2",
-                     TakenDate = DateTime.Now.AddDays(-4)
+                     ReturnDate = DateTime.Now.AddDays(-4)
                  },
                  new ActiveBookReservations
                  {
                      ReservationId = 2,
                      BookId = 2,
                      MemberId = "User2",
-                     TakenDate = DateTime.Now.AddDays(-2)
+                     ReturnDate = DateTime.Now.AddDays(-2)
                  },
                  new ActiveBookReservations
                  {
                      ReservationId = 3,
                      BookId = 2,
                      MemberId = "User1",
-                     TakenDate = DateTime.Now.AddDays(-6)
+                     ReturnDate = DateTime.Now.AddDays(-6)
                  }
             );
         }

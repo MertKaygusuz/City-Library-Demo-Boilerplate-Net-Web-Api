@@ -1,10 +1,6 @@
 ﻿using CityLibraryInfrastructure.DbBase;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CityLibraryInfrastructure.Entities
 {
@@ -23,11 +19,11 @@ namespace CityLibraryInfrastructure.Entities
         //virtual, might be lazy loaded
         public virtual ICollection<BookReservationHistories> BookReservationHistories { get; set; }
 
-        public virtual List<Books> PreviousTakenBooks { get; set; } //TODO: naming
+        public virtual List<Books> PreviouslyRecievedBooks { get; set; }
 
         public virtual ICollection<ActiveBookReservations> ActiveBookReservations { get; set; }
 
-        public virtual List<Books> TakenBooks { get; set; } //TODO: naming
+        public virtual List<Books> RecievedBooks { get; set; }
 
         public virtual ICollection<MemberRoles> MemberRoles { get; set; }
 

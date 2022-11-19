@@ -5,13 +5,15 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using System.Text.Json;
 using CityLibraryInfrastructure.ExceptionHandling.Dtos;
+using CityLibraryInfrastructure.Resources;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Localization;
 
 namespace CityLibraryInfrastructure.ExceptionHandling.Extensions;
 
 public static class GlobalExceptionHandlerExtension
 {
-    public static void UseCustomGlobalExceptionHandler(this WebApplication app)
+    public static void UseCustomGlobalExceptionHandler(this WebApplication app, IStringLocalizer<SharedResource> localizer)
     {
         app.UseExceptionHandler(builder =>
         {
@@ -31,7 +33,7 @@ public static class GlobalExceptionHandlerExtension
                     context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                     context.Response.ContentType = MediaTypeNames.Application.Json;
 
-                    var errorObject = new ErrorDto("Internal Server Error", 500);
+                    var errorObject = new ErrorDto( localizer["Internal_Server_Error"], 500);
                     if (app.Environment.IsDevelopment())
                     {
                         errorObject.InternalErrorMessage = exception.Message;

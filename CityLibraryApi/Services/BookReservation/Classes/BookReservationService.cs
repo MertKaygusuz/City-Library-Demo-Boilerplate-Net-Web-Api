@@ -51,7 +51,7 @@ namespace CityLibraryApi.Services.BookReservation.Classes
             {
                 BookId = dto.BookId,
                 MemberId = dto.UserName,
-                TakenDate = DateTime.Now
+                ReturnDate = DateTime.Now
             };
 
             await _activeBookReservationsRepo.InsertAsync(reservation);
@@ -93,7 +93,7 @@ namespace CityLibraryApi.Services.BookReservation.Classes
             
             var result = await baseData.Select(x => new ActiveBookReservationsResponseDto
             {
-                TakenDate = x.TakenDate,
+                ReturnDate = x.ReturnDate,
                 AvailableAt = x.AvailableAt,
                 UserName = x.Member.UserName,
                 MemberFullName = x.Member.FullName,
@@ -145,7 +145,7 @@ namespace CityLibraryApi.Services.BookReservation.Classes
         public async Task<IEnumerable<ReservationHistoryBookResponseDto>> GetReservationHistoryByBookAsync(ReservationHistoryBookDto dto)
         {
             var result = await (from z in _bookReservationHistoriesRepo.GetData().Where(x => x.BookId == dto.BookId)
-                                select new { z.BookId, z.MemberId, z.TakenDate, z.GivenDate } into BookMember
+                                select new { z.BookId, z.MemberId, z.ReturnDate, z.RecievedDate } into BookMember
                                 let book = _booksRepo.GetById(BookMember.BookId)
                                 let member = _membersRepo.GetById(BookMember.MemberId)
                                 select new ReservationHistoryBookResponseDto
@@ -154,8 +154,8 @@ namespace CityLibraryApi.Services.BookReservation.Classes
                                     FirstPublishDate = book.FirstPublishDate,
                                     EditionNumber = book.EditionNumber,
                                     EditionDate = book.EditionDate,
-                                    TakenDate = BookMember.TakenDate,
-                                    GivenDate = BookMember.GivenDate,
+                                    ReturnDate = BookMember.ReturnDate,
+                                    RecievedDate = BookMember.RecievedDate,
                                     UserName = BookMember.MemberId,
                                     FullName = member.FullName
                                 }).ToArrayAsync();
@@ -166,7 +166,7 @@ namespace CityLibraryApi.Services.BookReservation.Classes
         public async Task<IEnumerable<ReservationHistoryMemberResponseDto>> GetReservationHistoryByMemberAsync(ReservationHistoryMemberDto dto)
         {
             var result = await (from z in _bookReservationHistoriesRepo.GetData().Where(x => x.MemberId == dto.UserName)
-                                select new { z.BookId, z.MemberId, z.TakenDate, z.GivenDate } into BookMember
+                                select new { z.BookId, z.MemberId, z.ReturnDate, z.RecievedDate } into BookMember
                                 let book = _booksRepo.GetById(BookMember.BookId)
                                 let member = _membersRepo.GetById(BookMember.MemberId)
                                 select new ReservationHistoryMemberResponseDto
@@ -177,8 +177,8 @@ namespace CityLibraryApi.Services.BookReservation.Classes
                                     FirstPublishDate = book.FirstPublishDate,
                                     EditionNumber = book.EditionNumber,
                                     EditionDate = book.EditionDate,
-                                    TakenDate = BookMember.TakenDate,
-                                    GivenDate = BookMember.GivenDate
+                                    ReturnDate = BookMember.ReturnDate,
+                                    RecievedDate = BookMember.RecievedDate
                                 }).ToArrayAsync();
 
             return result;
@@ -188,7 +188,7 @@ namespace CityLibraryApi.Services.BookReservation.Classes
         {
             //TODO: farklı query düzenleri deneme
             var baseQuery = (from z in _bookReservationHistoriesRepo.GetData()
-                            select new { z.BookId, z.MemberId, z.TakenDate, z.GivenDate } into BookMember
+                            select new { z.BookId, z.MemberId, z.ReturnDate, z.RecievedDate } into BookMember
                             let book = _booksRepo.GetById(BookMember.BookId)
                             let member = _membersRepo.GetById(BookMember.MemberId)
                             select new ReservationHistoryBookResponseDto
@@ -197,8 +197,8 @@ namespace CityLibraryApi.Services.BookReservation.Classes
                                 FirstPublishDate = book.FirstPublishDate,
                                 EditionNumber = book.EditionNumber,
                                 EditionDate = book.EditionDate,
-                                TakenDate = BookMember.TakenDate,
-                                GivenDate = BookMember.GivenDate,
+                                ReturnDate = BookMember.ReturnDate,
+                                RecievedDate = BookMember.RecievedDate,
                                 UserName = BookMember.MemberId,
                                 FullName = member.FullName
                             }).OrderBy(dto.SortingModel).Skip(dto.Skip);
@@ -213,7 +213,7 @@ namespace CityLibraryApi.Services.BookReservation.Classes
         {
             //TODO: farklı query düzenleri deneme
             var baseQuery = (from z in _bookReservationHistoriesRepo.GetData()
-                             select new { z.BookId, z.MemberId, z.TakenDate, z.GivenDate } into BookMember
+                             select new { z.BookId, z.MemberId, z.ReturnDate, z.RecievedDate } into BookMember
                              let book = _booksRepo.GetById(BookMember.BookId)
                              let member = _membersRepo.GetById(BookMember.MemberId)
                              select new ReservationHistoryMemberResponseDto
@@ -224,8 +224,8 @@ namespace CityLibraryApi.Services.BookReservation.Classes
                                  FirstPublishDate = book.FirstPublishDate,
                                  EditionNumber = book.EditionNumber,
                                  EditionDate = book.EditionDate,
-                                 TakenDate = BookMember.TakenDate,
-                                 GivenDate = BookMember.GivenDate
+                                 ReturnDate = BookMember.ReturnDate,
+                                 RecievedDate = BookMember.RecievedDate
                              }).OrderBy(dto.SortingModel).Skip(dto.Skip);
 
             if (dto.Take > 0)
@@ -250,10 +250,10 @@ namespace CityLibraryApi.Services.BookReservation.Classes
 
         public async Task UnAssignBookFromUserAsync(AssignBookToMemberDto dto)
         {
-            //get first record on the basis of TakenDate
+            //get first record on the basis of ReturnDate
             var activeReservation = await _activeBookReservationsRepo.GetDataWithLinqExp(x => x.MemberId == dto.UserName
                                                                                            && x.BookId == dto.BookId)
-                                                                     .OrderBy(x => x.TakenDate)
+                                                                     .OrderBy(x => x.ReturnDate)
                                                                      .FirstOrDefaultAsync();
 
             var bookRecord = await _booksRepo.GetByIdAsync(dto.BookId);
@@ -267,8 +267,8 @@ namespace CityLibraryApi.Services.BookReservation.Classes
             {
                 BookId = dto.BookId,
                 MemberId = dto.UserName,
-                TakenDate = activeReservation.TakenDate,
-                GivenDate = DateTime.Now
+                ReturnDate = activeReservation.ReturnDate,
+                RecievedDate = DateTime.Now
             };
             await _bookReservationHistoriesRepo.InsertAsync(historyRecord);
             _activeBookReservationsRepo.Delete(activeReservation);

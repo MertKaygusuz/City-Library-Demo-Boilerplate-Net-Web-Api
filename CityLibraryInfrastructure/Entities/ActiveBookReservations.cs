@@ -12,10 +12,10 @@ namespace CityLibraryInfrastructure.Entities
     {
         public int ReservationId { get; set; }
 
-        public DateTime TakenDate { get; set; } //TODO: ?
+        public DateTime ReturnDate { get; set; }
 
         //Default return period 7 days
-        public DateTime AvailableAt => TakenDate.AddDays(7);
+        public DateTime AvailableAt => ReturnDate.AddDays(7);
 
         public string MemberId { get; set; }
 

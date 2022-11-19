@@ -9,8 +9,14 @@ using CityLibraryInfrastructure.Resources;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.Extensions.Localization;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseSerilog((hostContext, loggerConfiguration) =>
+{
+    loggerConfiguration.ReadFrom.Configuration(builder.Configuration);
+});
 
 var configuration = builder.Configuration;
 // IWebHostEnvironment environment = builder.Environment;
@@ -40,7 +46,6 @@ var app = builder.Build();
 GenerateAndVerifyPasswords.Localizer =
     app.Services.GetService<IStringLocalizer<ExceptionsResource>>();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
@@ -48,16 +53,18 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "CityLibrary v1"));
 }
 
+app.UseSerilogRequestLogging();
+
 app.UseRequestLocalization();
 
 app.UseStaticHttpContext();
 
 app.UseCors(opts =>
-        //TODO: content disposition explanation
+        // Content dispositon is useful for getting file name for frontend application
         opts.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().WithExposedHeaders("Content-Disposition")
 );
 
-app.UseCustomGlobalExceptionHandler();
+app.UseCustomGlobalExceptionHandler(app.Services.GetService<IStringLocalizer<SharedResource>>());
 
 app.UseRouting();
 

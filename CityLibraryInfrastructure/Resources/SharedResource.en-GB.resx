@@ -133,4 +133,7 @@
     <value>It must contain at most {0} characters.</value>
     <comment/>
   </data>
+  <data name="Internal_Server_Error" xml:space="preserve">
+    <value>Internal server error!</value>
+  </data>
 </root>

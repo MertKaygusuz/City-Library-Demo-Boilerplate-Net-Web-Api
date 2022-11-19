@@ -44,5 +44,35 @@ namespace CityLibraryInfrastructure.Resources {
                 resourceCulture = value;
             }
         }
+        
+        internal static string User_Name_Required {
+            get {
+                return ResourceManager.GetString("User_Name_Required", resourceCulture);
+            }
+        }
+        
+        internal static string Password_Required {
+            get {
+                return ResourceManager.GetString("Password_Required", resourceCulture);
+            }
+        }
+        
+        internal static string Minimum_Length {
+            get {
+                return ResourceManager.GetString("Minimum_Length", resourceCulture);
+            }
+        }
+        
+        internal static string Maximum_Length {
+            get {
+                return ResourceManager.GetString("Maximum_Length", resourceCulture);
+            }
+        }
+        
+        internal static string Internal_Server_Error {
+            get {
+                return ResourceManager.GetString("Internal_Server_Error", resourceCulture);
+            }
+        }
     }
 }

@@ -133,4 +133,7 @@
     <value>En fazla {0} karakter içermelidir.</value>
     <comment/>
   </data>
+  <data name="Internal_Server_Error" xml:space="preserve">
+    <value>Sunucu kaynaklı bir hata oluştu!</value>
+  </data>
 </root>

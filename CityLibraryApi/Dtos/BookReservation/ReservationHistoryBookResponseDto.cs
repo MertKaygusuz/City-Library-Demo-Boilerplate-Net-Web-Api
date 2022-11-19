@@ -16,9 +16,9 @@ namespace CityLibraryApi.Dtos.BookReservation
 
         public DateTime EditionDate { get; set; }
 
-        public DateTime TakenDate { get; set; }
+        public DateTime ReturnDate { get; set; }
 
-        public DateTime GivenDate { get; set; }
+        public DateTime RecievedDate { get; set; }
 
         public string UserName { get; set; }
 

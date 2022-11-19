@@ -9,7 +9,7 @@ namespace CityLibraryApi.Dtos.BookReservation
 {
     public class ActiveBookReservationsResponseDto
     {
-        public DateTime TakenDate { get; set; } //TODO: ?
+        public DateTime ReturnDate { get; set; }
 
         public DateTime AvailableAt { get; set; }
 
