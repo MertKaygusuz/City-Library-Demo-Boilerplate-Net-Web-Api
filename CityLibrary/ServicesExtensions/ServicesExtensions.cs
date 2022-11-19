@@ -17,6 +17,7 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using CityLibrary.SwaggerRelated;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.OpenApi.Models;
 
@@ -102,6 +103,7 @@ namespace CityLibrary.ServicesExtensions
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "CityLibrary", Version = "v1" });
+                c.OperationFilter<AcceptLanguageHeaderSwaggerAttribute>();
                 var securityScheme = new OpenApiSecurityScheme
                 {
                     Name = "JWT Authentication",
