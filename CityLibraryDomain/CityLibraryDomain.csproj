@@ -1,12 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <Nullable>warnings</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="EntityFrameworkCore.Triggered.Extensions" Version="3.2.1" />
+    <PackageReference Include="EntityFrameworkCore.Triggered.Extensions" Version="3.2.2" />
     <PackageReference Include="EntityFrameworkCore.Triggers" Version="1.2.3" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
   </ItemGroup>
