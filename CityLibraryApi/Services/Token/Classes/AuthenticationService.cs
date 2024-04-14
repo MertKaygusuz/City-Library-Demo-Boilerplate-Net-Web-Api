@@ -82,7 +82,7 @@ namespace CityLibraryApi.Services.Token.Classes
             if (oldToken is null)
                 throw new CustomBusinessException("Refresh token could not be found!");
 
-            if (DateTime.Compare(DateTime.Now, oldToken.DueTime) > 1)
+            if (DateTime.Compare(DateTime.Now, oldToken.DueTime) > 0)
                 throw new CustomStatusException(_localizer["Session_Timeout"], 401);
             
 
